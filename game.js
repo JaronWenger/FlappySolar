@@ -109,7 +109,9 @@ class FlappySolar {
         if (e.code === 'Space') {
             if (!this.gameStarted) {
                 this.startGame();
-            } else if (!this.gameOver) {
+            } else if (this.gameOver) {
+                this.restartGame();
+            } else {
                 this.bird.velocity = this.bird.jump;
             }
         }
