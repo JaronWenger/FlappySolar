@@ -85,6 +85,10 @@ class FlappySolar {
             };
             this.images[key].onerror = (e) => {
                 console.error(`Error loading image ${src}:`, e);
+                // Fallback to stars if background fails to load
+                if (key === 'background') {
+                    console.log('Using stars as fallback background');
+                }
             };
             this.images[key].src = src;
         }
