@@ -70,8 +70,8 @@ class FlappySolar {
         const imageSources = {
             bird: `${baseUrl}/src/LOGO.png`,
             background: `${baseUrl}/src/Background.jpg`,
-            pipeTop: `${baseUrl}/src/pipe.svg`,
-            pipeBottom: `${baseUrl}/src/pipe.svg`
+            pipeTop: `${baseUrl}/src/solar-panel.svg`,
+            pipeBottom: `${baseUrl}/src/solar-panel.svg`
         };
         
         let loadedImages = 0;
