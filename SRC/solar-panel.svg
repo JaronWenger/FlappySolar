@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="60" height="320" viewBox="0 0 60 320" xmlns="http://www.w3.org/2000/svg">
+  <!-- Solar panel frame -->
+  <rect x="0" y="0" width="60" height="320" fill="#333333" stroke="#000000" stroke-width="2"/>
+  
+  <!-- Solar cells -->
+  <rect x="5" y="5" width="50" height="30" fill="#000000"/>
+  <rect x="5" y="45" width="50" height="30" fill="#000000"/>
+  <rect x="5" y="85" width="50" height="30" fill="#000000"/>
+  <rect x="5" y="125" width="50" height="30" fill="#000000"/>
+  <rect x="5" y="165" width="50" height="30" fill="#000000"/>
+  <rect x="5" y="205" width="50" height="30" fill="#000000"/>
+  <rect x="5" y="245" width="50" height="30" fill="#000000"/>
+  <rect x="5" y="285" width="50" height="30" fill="#000000"/>
+  
+  <!-- Solar cell grid lines -->
+  <line x1="5" y1="20" x2="55" y2="20" stroke="#333333" stroke-width="1"/>
+  <line x1="5" y1="60" x2="55" y2="60" stroke="#333333" stroke-width="1"/>
+  <line x1="5" y1="100" x2="55" y2="100" stroke="#333333" stroke-width="1"/>
+  <line x1="5" y1="140" x2="55" y2="140" stroke="#333333" stroke-width="1"/>
+  <line x1="5" y1="180" x2="55" y2="180" stroke="#333333" stroke-width="1"/>
+  <line x1="5" y1="220" x2="55" y2="220" stroke="#333333" stroke-width="1"/>
+  <line x1="5" y1="260" x2="55" y2="260" stroke="#333333" stroke-width="1"/>
+  <line x1="5" y1="300" x2="55" y2="300" stroke="#333333" stroke-width="1"/>
+  
+  <!-- Solar cell vertical lines -->
+  <line x1="20" y1="5" x2="20" y2="35" stroke="#333333" stroke-width="1"/>
+  <line x1="35" y1="5" x2="35" y2="35" stroke="#333333" stroke-width="1"/>
+  <line x1="20" y1="45" x2="20" y2="75" stroke="#333333" stroke-width="1"/>
+  <line x1="35" y1="45" x2="35" y2="75" stroke="#333333" stroke-width="1"/>
+  <line x1="20" y1="85" x2="20" y2="115" stroke="#333333" stroke-width="1"/>
+  <line x1="35" y1="85" x2="35" y2="115" stroke="#333333" stroke-width="1"/>
+  <line x1="20" y1="125" x2="20" y2="155" stroke="#333333" stroke-width="1"/>
+  <line x1="35" y1="125" x2="35" y2="155" stroke="#333333" stroke-width="1"/>
+  <line x1="20" y1="165" x2="20" y2="195" stroke="#333333" stroke-width="1"/>
+  <line x1="35" y1="165" x2="35" y2="195" stroke="#333333" stroke-width="1"/>
+  <line x1="20" y1="205" x2="20" y2="235" stroke="#333333" stroke-width="1"/>
+  <line x1="35" y1="205" x2="35" y2="235" stroke="#333333" stroke-width="1"/>
+  <line x1="20" y1="245" x2="20" y2="275" stroke="#333333" stroke-width="1"/>
+  <line x1="35" y1="245" x2="35" y2="275" stroke="#333333" stroke-width="1"/>
+  <line x1="20" y1="285" x2="20" y2="315" stroke="#333333" stroke-width="1"/>
+  <line x1="35" y1="285" x2="35" y2="315" stroke="#333333" stroke-width="1"/>
+</svg> 

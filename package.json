@@ -1,0 +1,17 @@
+{
+  "name": "flappy-solar",
+  "version": "1.0.0",
+  "description": "A space-themed Flappy Bird game",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "stop": "pkill -f 'node server.js'"
+  },
+  "dependencies": {
+    "three": "^0.160.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  }
+} 

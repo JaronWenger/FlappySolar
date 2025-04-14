@@ -2,25 +2,70 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Flappy Solar</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* Mobile-specific styles */
+        body {
+            touch-action: manipulation; /* Prevents double-tap zoom on mobile */
+            -webkit-touch-callout: none; /* Prevents callout to copy image on iOS */
+            -webkit-user-select: none; /* Prevents text selection */
+            user-select: none;
+        }
+        
+        #gameCanvas {
+            touch-action: none; /* Prevents browser handling of touch events */
+        }
+        
+        /* Make the game responsive */
+        @media (max-width: 500px) {
+            #gameContainer {
+                width: 100%;
+                height: 100vh;
+            }
+            
+            #gameCanvas {
+                width: 100%;
+                height: 100%;
+            }
+            
+            .game-ui {
+                font-size: 1.2rem;
+            }
+            
+            #startScreen, #gameOver {
+                font-size: 1.5rem;
+            }
+            
+            button {
+                padding: 10px 20px;
+                font-size: 1.2rem;
+            }
+        }
+    </style>
 </head>
 <body>
-    <div class="game-container">
-        <div class="score">Score: <span id="score">0</span></div>
-        <div class="high-score">High Score: <span id="highScore">0</span></div>
+    <div id="gameContainer">
         <canvas id="gameCanvas"></canvas>
-        <div class="game-over hidden" id="gameOver">
+        
+        <div id="startScreen" class="game-ui">
+            <h1>Flappy Solar</h1>
+            <p>Tap or press Space to start</p>
+        </div>
+        
+        <div id="gameOver" class="game-ui hidden">
             <h2>Game Over</h2>
             <p>Score: <span id="finalScore">0</span></p>
+            <p>High Score: <span id="highScore">0</span></p>
             <button id="restartButton">Play Again</button>
         </div>
-        <div class="start-screen" id="startScreen">
-            <h1>Flappy Solar</h1>
-            <p>Press Space to Start</p>
+        
+        <div id="scoreDisplay" class="game-ui">
+            <p>Score: <span id="score">0</span></p>
         </div>
     </div>
+    
     <script src="game.js"></script>
 </body>
 </html> 
