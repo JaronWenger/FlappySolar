@@ -1,0 +1,22 @@
+{
+  "name": "flappy-solar",
+  "version": "1.0.0",
+  "description": "A space-themed Flappy Bird game",
+  "main": "server.js",
+  "homepage": "https://jaronwenger.github.io/FlappySolar/",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "stop": "pkill -f 'node server.js'",
+    "build": "echo 'No build step needed'",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d ."
+  },
+  "dependencies": {
+    "three": "^0.160.0"
+  },
+  "devDependencies": {
+    "gh-pages": "^6.3.0",
+    "nodemon": "^3.0.2"
+  }
+}
