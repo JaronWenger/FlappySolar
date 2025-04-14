@@ -10,7 +10,8 @@
     "stop": "pkill -f 'node server.js'",
     "predeploy": "npm run build",
     "build": "echo 'No build step needed'",
-    "deploy": "gh-pages -d ."
+    "deploy": "gh-pages -d .",
+    "fix-gh-pages": "node check-gh-pages.js"
   },
   "dependencies": {
     "three": "^0.160.0"
