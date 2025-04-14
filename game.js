@@ -62,11 +62,14 @@ class FlappySolar {
     }
     
     loadImages() {
+        // Get the base URL for GitHub Pages
+        const baseUrl = window.location.hostname.includes('github.io') ? '/FlappySolar' : '';
+            
         const imageSources = {
-            bird: './src/LOGO.png',
-            background: './src/Background.jpg',
-            pipeTop: './src/solar-panel.svg',
-            pipeBottom: './src/solar-panel.svg'
+            bird: `${baseUrl}/src/LOGO.png`,
+            background: `${baseUrl}/src/Background.jpg`,
+            pipeTop: `${baseUrl}/src/solar-panel.svg`,
+            pipeBottom: `${baseUrl}/src/solar-panel.svg`
         };
         
         let loadedImages = 0;

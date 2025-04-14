@@ -10,7 +10,7 @@
     "stop": "pkill -f 'node server.js'",
     "build": "echo 'No build step needed'",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d . --dotfiles true"
+    "deploy": "gh-pages -d . -t true"
   },
   "dependencies": {
     "three": "^0.160.0"
