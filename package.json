@@ -11,7 +11,8 @@
     "predeploy": "npm run build",
     "build": "echo 'No build step needed'",
     "deploy": "gh-pages -d .",
-    "fix-gh-pages": "node check-gh-pages.js"
+    "fix-gh-pages": "node check-gh-pages.js",
+    "upload-images": "node upload-images.js"
   },
   "dependencies": {
     "three": "^0.160.0"
