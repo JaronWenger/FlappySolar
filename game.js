@@ -63,14 +63,19 @@ class FlappySolar {
     
     loadImages() {
         // Get the base URL for GitHub Pages
-        const baseUrl = window.location.hostname.includes('github.io') ? '/FlappySolar' : '';
+        const isGitHubPages = window.location.hostname.includes('github.io');
+        const baseUrl = isGitHubPages ? '/FlappySolar' : '';
             
+        // Define image sources with proper paths
         const imageSources = {
             bird: `${baseUrl}/src/LOGO.png`,
             background: `${baseUrl}/src/Background.jpg`,
             pipeTop: `${baseUrl}/src/solar-panel.svg`,
             pipeBottom: `${baseUrl}/src/solar-panel.svg`
         };
+        
+        // Log the image paths for debugging
+        console.log('Loading images with paths:', imageSources);
         
         let loadedImages = 0;
         const totalImages = Object.keys(imageSources).length;
@@ -79,12 +84,17 @@ class FlappySolar {
             this.images[key] = new Image();
             this.images[key].onload = () => {
                 loadedImages++;
+                console.log(`Loaded image: ${key} from ${src}`);
                 if (loadedImages === totalImages) {
                     console.log('All images loaded successfully');
                 }
             };
             this.images[key].onerror = (e) => {
                 console.error(`Error loading image ${src}:`, e);
+                // Fallback to stars if background fails to load
+                if (key === 'background') {
+                    console.log('Using stars as fallback background');
+                }
             };
             this.images[key].src = src;
         }
