@@ -3,8 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
     <title>Flappy Solar</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
     <style>
         /* Mobile-specific styles */
         body {
@@ -46,23 +49,24 @@
     </style>
 </head>
 <body>
-    <div id="gameContainer">
+    <div class="game-container">
         <canvas id="gameCanvas"></canvas>
         
         <div id="startScreen" class="game-ui">
             <h1>Flappy Solar</h1>
-            <p>Tap or press Space to start</p>
+            <p>Tap to start</p>
+            <p class="instructions">Tap the screen to make the bird jump</p>
         </div>
         
         <div id="gameOver" class="game-ui hidden">
             <h2>Game Over</h2>
             <p>Score: <span id="finalScore">0</span></p>
-            <p>High Score: <span id="highScore">0</span></p>
             <button id="restartButton">Play Again</button>
         </div>
         
         <div id="scoreDisplay" class="game-ui">
             <p>Score: <span id="score">0</span></p>
+            <p>High Score: <span id="highScore">0</span></p>
         </div>
     </div>
     

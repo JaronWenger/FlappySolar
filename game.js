@@ -15,6 +15,9 @@ class FlappySolar {
         this.images = {};
         this.loadImages();
         
+        // Detect mobile device
+        this.isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        
         // Bird properties
         this.bird = {
             x: 50,
@@ -22,8 +25,8 @@ class FlappySolar {
             width: 40,
             height: 40,
             velocity: 0,
-            gravity: 0.2, ////////////////////////////////////////////////
-            jump: -5,
+            gravity: this.isMobile ? 0.15 : 0.2, // Slightly reduced gravity on mobile
+            jump: this.isMobile ? -4 : -5, // Slightly reduced jump on mobile
             rotation: 0
         };
         
@@ -31,15 +34,15 @@ class FlappySolar {
         this.pipes = [];
         this.pipeWidth = 60;
         this.pipeGap = 150;
-        this.pipeSpacing = 250; /////////////////////////////////////////////////////////
-        this.pipeSpeed = 2;
+        this.pipeSpacing = 250;
+        this.pipeSpeed = this.isMobile ? 1.5 : 2; // Slower pipes on mobile
         
         // Background parallax
         this.backgroundX = 0;
-        this.backgroundSpeed = 0.5; // Background moves at 1/4 the speed of pipes
+        this.backgroundSpeed = this.isMobile ? 0.3 : 0.5; // Slower background on mobile
         
         // Stars background
-        this.stars = this.createStars(100);
+        this.stars = this.createStars(this.isMobile ? 50 : 100); // Fewer stars on mobile
         
         // Event listeners
         document.addEventListener('keydown', this.handleKeyDown.bind(this));
@@ -57,23 +60,11 @@ class FlappySolar {
         // Update high score display
         document.getElementById('highScore').textContent = this.highScore;
         
-        // Add performance optimization flags
+        // Performance tracking
         this.lastFrameTime = 0;
         this.frameCount = 0;
         this.lastFPSUpdate = 0;
         this.currentFPS = 0;
-        this.isLowPerformanceMode = false;
-        
-        // Detect mobile device
-        this.isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-        
-        // Adjust game speed for mobile
-        if (this.isMobile) {
-            this.gravity = 0.4;
-            this.jumpForce = -8;
-            this.pipeSpeed = 2;
-            this.pipeSpawnInterval = 2000;
-        }
         
         // Start animation loop
         this.animate();
@@ -207,7 +198,7 @@ class FlappySolar {
         if (!this.gameStarted || this.gameOver) return;
         
         // Update bird
-        this.bird.velocity += this.gravity;
+        this.bird.velocity += this.bird.gravity;
         this.bird.y += this.bird.velocity;
         this.bird.rotation = Math.min(Math.PI / 4, Math.max(-Math.PI / 4, this.bird.velocity * 0.1));
         
@@ -286,21 +277,15 @@ class FlappySolar {
     }
     
     draw() {
-        // Clear canvas with optimized method
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        // Clear canvas
+        this.ctx.fillStyle = '#000000';
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
         
-        // Draw background with optimized scaling
+        // Draw background with parallax effect
         if (this.images.background && this.images.background.complete) {
-            const scale = Math.max(
-                this.canvas.width / this.images.background.width,
-                this.canvas.height / this.images.background.height
-            );
-            const scaledWidth = this.images.background.width * scale;
-            const scaledHeight = this.images.background.height * scale;
-            const x = (this.canvas.width - scaledWidth) / 2;
-            const y = (this.canvas.height - scaledHeight) / 2;
-            
-            this.ctx.drawImage(this.images.background, x, y, scaledWidth, scaledHeight);
+            // Draw two copies of the background side by side for seamless scrolling
+            this.ctx.drawImage(this.images.background, this.backgroundX, 0, this.canvas.width, this.canvas.height);
+            this.ctx.drawImage(this.images.background, this.backgroundX + this.canvas.width, 0, this.canvas.width, this.canvas.height);
         } else {
             // Draw stars as fallback
             this.ctx.fillStyle = '#FFFFFF';
@@ -311,22 +296,27 @@ class FlappySolar {
             });
         }
         
-        // Draw pipes with optimized rendering
+        // Draw pipes
         for (const pipe of this.pipes) {
+            // Top pipe - now goes all the way to the top
             if (this.images.pipeTop && this.images.pipeTop.complete) {
-                // Top pipe
-                this.ctx.save();
-                this.ctx.scale(1, -1);
+                // Draw solar panel top pipe
                 this.ctx.drawImage(
                     this.images.pipeTop,
                     pipe.x,
-                    -pipe.topHeight,
+                    0, // Start from the top of the screen
                     this.pipeWidth,
-                    pipe.topHeight
+                    pipe.topHeight // Draw all the way down to the gap
                 );
-                this.ctx.restore();
+            } else {
+                // Fallback to rectangle
+                this.ctx.fillStyle = '#000000';
+                this.ctx.fillRect(pipe.x, 0, this.pipeWidth, pipe.topHeight);
+            }
 
-                // Bottom pipe
+            // Bottom pipe
+            if (this.images.pipeBottom && this.images.pipeBottom.complete) {
+                // Draw solar panel bottom pipe
                 this.ctx.drawImage(
                     this.images.pipeBottom,
                     pipe.x,
@@ -337,35 +327,37 @@ class FlappySolar {
             } else {
                 // Fallback to rectangle
                 this.ctx.fillStyle = '#000000';
-                this.ctx.fillRect(pipe.x, 0, this.pipeWidth, pipe.topHeight);
                 this.ctx.fillRect(pipe.x, pipe.bottomY, this.pipeWidth, this.canvas.height - pipe.bottomY);
             }
         }
         
-        // Draw bird with optimized scaling
+        // Draw bird
+        this.ctx.save();
+        this.ctx.translate(this.bird.x + this.bird.width / 2, this.bird.y + this.bird.height / 2);
+        this.ctx.rotate(this.bird.rotation);
+        
         if (this.images.bird && this.images.bird.complete) {
-            const birdScale = this.isMobile ? 0.8 : 1;
-            const birdWidth = this.images.bird.width * birdScale;
-            const birdHeight = this.images.bird.height * birdScale;
+            // Draw bird image with proper aspect ratio
+            const aspectRatio = this.images.bird.width / this.images.bird.height;
+            const drawWidth = this.bird.width;
+            const drawHeight = drawWidth / aspectRatio;
             
-            this.ctx.save();
-            this.ctx.translate(this.bird.x + birdWidth/2, this.bird.y + birdHeight/2);
-            this.ctx.rotate(this.bird.rotation);
             this.ctx.drawImage(
                 this.images.bird,
-                -birdWidth/2,
-                -birdHeight/2,
-                birdWidth,
-                birdHeight
+                -drawWidth / 2,
+                -drawHeight / 2,
+                drawWidth,
+                drawHeight
             );
-            this.ctx.restore();
         } else {
             // Fallback to circle
             this.ctx.fillStyle = '#ff6b6b';
             this.ctx.beginPath();
-            this.ctx.arc(this.bird.x + this.bird.width / 2, this.bird.y + this.bird.height / 2, this.bird.width / 2, 0, Math.PI * 2);
+            this.ctx.arc(0, 0, this.bird.width / 2, 0, Math.PI * 2);
             this.ctx.fill();
         }
+        
+        this.ctx.restore();
     }
     
     animate(currentTime) {
@@ -379,22 +371,21 @@ class FlappySolar {
             this.frameCount = 0;
             this.lastFPSUpdate = currentTime;
             
-            // Check if we need to enable low performance mode
-            if (this.currentFPS < 30 && !this.isLowPerformanceMode) {
-                this.isLowPerformanceMode = true;
-                this.pipeSpeed *= 0.8;
-                this.pipeSpawnInterval *= 1.2;
+            // Log FPS for debugging
+            if (this.isMobile) {
+                console.log(`Mobile FPS: ${this.currentFPS}`);
             }
         }
-
+        
         // Skip frame if too much time has passed (prevents large jumps)
         if (deltaTime > 100) {
             requestAnimationFrame(this.animate.bind(this));
             return;
         }
-
+        
         this.update();
         this.draw();
+        requestAnimationFrame(this.animate.bind(this));
     }
 }
 
