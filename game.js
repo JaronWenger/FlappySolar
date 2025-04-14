@@ -22,7 +22,7 @@ class FlappySolar {
             width: 40,
             height: 40,
             velocity: 0,
-            gravity: 0.2,
+            gravity: 0.2, ////////////////////////////////////////////////
             jump: -5,
             rotation: 0
         };
@@ -31,7 +31,7 @@ class FlappySolar {
         this.pipes = [];
         this.pipeWidth = 60;
         this.pipeGap = 150;
-        this.pipeSpacing = 250; /////////////////////////
+        this.pipeSpacing = 250; /////////////////////////////////////////////////////////
         this.pipeSpeed = 2;
         
         // Background parallax
@@ -62,11 +62,16 @@ class FlappySolar {
     }
     
     loadImages() {
+        // Get the base URL for GitHub Pages
+        const baseUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+            ? '' 
+            : '/FlappySolar';
+            
         const imageSources = {
-            bird: 'src/LOGO.png',
-            background: 'src/Background.jpg',
-            pipeTop: 'src/solar-panel.svg',
-            pipeBottom: 'src/solar-panel.svg'
+            bird: `${baseUrl}/src/LOGO.png`,
+            background: `${baseUrl}/src/Background.jpg`,
+            pipeTop: `${baseUrl}/src/solar-panel.svg`,
+            pipeBottom: `${baseUrl}/src/solar-panel.svg`
         };
         
         let loadedImages = 0;
