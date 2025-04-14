@@ -57,6 +57,24 @@ class FlappySolar {
         // Update high score display
         document.getElementById('highScore').textContent = this.highScore;
         
+        // Add performance optimization flags
+        this.lastFrameTime = 0;
+        this.frameCount = 0;
+        this.lastFPSUpdate = 0;
+        this.currentFPS = 0;
+        this.isLowPerformanceMode = false;
+        
+        // Detect mobile device
+        this.isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        
+        // Adjust game speed for mobile
+        if (this.isMobile) {
+            this.gravity = 0.4;
+            this.jumpForce = -8;
+            this.pipeSpeed = 2;
+            this.pipeSpawnInterval = 2000;
+        }
+        
         // Start animation loop
         this.animate();
     }
@@ -189,7 +207,7 @@ class FlappySolar {
         if (!this.gameStarted || this.gameOver) return;
         
         // Update bird
-        this.bird.velocity += this.bird.gravity;
+        this.bird.velocity += this.gravity;
         this.bird.y += this.bird.velocity;
         this.bird.rotation = Math.min(Math.PI / 4, Math.max(-Math.PI / 4, this.bird.velocity * 0.1));
         
@@ -268,15 +286,21 @@ class FlappySolar {
     }
     
     draw() {
-        // Clear canvas
-        this.ctx.fillStyle = '#000000';
-        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        // Clear canvas with optimized method
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         
-        // Draw background with parallax effect
+        // Draw background with optimized scaling
         if (this.images.background && this.images.background.complete) {
-            // Draw two copies of the background side by side for seamless scrolling
-            this.ctx.drawImage(this.images.background, this.backgroundX, 0, this.canvas.width, this.canvas.height);
-            this.ctx.drawImage(this.images.background, this.backgroundX + this.canvas.width, 0, this.canvas.width, this.canvas.height);
+            const scale = Math.max(
+                this.canvas.width / this.images.background.width,
+                this.canvas.height / this.images.background.height
+            );
+            const scaledWidth = this.images.background.width * scale;
+            const scaledHeight = this.images.background.height * scale;
+            const x = (this.canvas.width - scaledWidth) / 2;
+            const y = (this.canvas.height - scaledHeight) / 2;
+            
+            this.ctx.drawImage(this.images.background, x, y, scaledWidth, scaledHeight);
         } else {
             // Draw stars as fallback
             this.ctx.fillStyle = '#FFFFFF';
@@ -287,27 +311,22 @@ class FlappySolar {
             });
         }
         
-        // Draw pipes
+        // Draw pipes with optimized rendering
         for (const pipe of this.pipes) {
-            // Top pipe - now goes all the way to the top
             if (this.images.pipeTop && this.images.pipeTop.complete) {
-                // Draw solar panel top pipe
+                // Top pipe
+                this.ctx.save();
+                this.ctx.scale(1, -1);
                 this.ctx.drawImage(
                     this.images.pipeTop,
                     pipe.x,
-                    0, // Start from the top of the screen
+                    -pipe.topHeight,
                     this.pipeWidth,
-                    pipe.topHeight // Draw all the way down to the gap
+                    pipe.topHeight
                 );
-            } else {
-                // Fallback to rectangle
-                this.ctx.fillStyle = '#000000';
-                this.ctx.fillRect(pipe.x, 0, this.pipeWidth, pipe.topHeight);
-            }
-            
-            // Bottom pipe
-            if (this.images.pipeBottom && this.images.pipeBottom.complete) {
-                // Draw solar panel bottom pipe
+                this.ctx.restore();
+
+                // Bottom pipe
                 this.ctx.drawImage(
                     this.images.pipeBottom,
                     pipe.x,
@@ -318,43 +337,64 @@ class FlappySolar {
             } else {
                 // Fallback to rectangle
                 this.ctx.fillStyle = '#000000';
+                this.ctx.fillRect(pipe.x, 0, this.pipeWidth, pipe.topHeight);
                 this.ctx.fillRect(pipe.x, pipe.bottomY, this.pipeWidth, this.canvas.height - pipe.bottomY);
             }
         }
         
-        // Draw bird
-        this.ctx.save();
-        this.ctx.translate(this.bird.x + this.bird.width / 2, this.bird.y + this.bird.height / 2);
-        this.ctx.rotate(this.bird.rotation);
-        
+        // Draw bird with optimized scaling
         if (this.images.bird && this.images.bird.complete) {
-            // Draw bird image with proper aspect ratio
-            const aspectRatio = this.images.bird.width / this.images.bird.height;
-            const drawWidth = this.bird.width;
-            const drawHeight = drawWidth / aspectRatio;
+            const birdScale = this.isMobile ? 0.8 : 1;
+            const birdWidth = this.images.bird.width * birdScale;
+            const birdHeight = this.images.bird.height * birdScale;
             
+            this.ctx.save();
+            this.ctx.translate(this.bird.x + birdWidth/2, this.bird.y + birdHeight/2);
+            this.ctx.rotate(this.bird.rotation);
             this.ctx.drawImage(
                 this.images.bird,
-                -drawWidth / 2,
-                -drawHeight / 2,
-                drawWidth,
-                drawHeight
+                -birdWidth/2,
+                -birdHeight/2,
+                birdWidth,
+                birdHeight
             );
+            this.ctx.restore();
         } else {
             // Fallback to circle
             this.ctx.fillStyle = '#ff6b6b';
             this.ctx.beginPath();
-            this.ctx.arc(0, 0, this.bird.width / 2, 0, Math.PI * 2);
+            this.ctx.arc(this.bird.x + this.bird.width / 2, this.bird.y + this.bird.height / 2, this.bird.width / 2, 0, Math.PI * 2);
             this.ctx.fill();
         }
-        
-        this.ctx.restore();
     }
     
-    animate() {
+    animate(currentTime) {
+        // Calculate delta time and FPS
+        const deltaTime = currentTime - this.lastFrameTime;
+        this.lastFrameTime = currentTime;
+        
+        this.frameCount++;
+        if (currentTime - this.lastFPSUpdate >= 1000) {
+            this.currentFPS = this.frameCount;
+            this.frameCount = 0;
+            this.lastFPSUpdate = currentTime;
+            
+            // Check if we need to enable low performance mode
+            if (this.currentFPS < 30 && !this.isLowPerformanceMode) {
+                this.isLowPerformanceMode = true;
+                this.pipeSpeed *= 0.8;
+                this.pipeSpawnInterval *= 1.2;
+            }
+        }
+
+        // Skip frame if too much time has passed (prevents large jumps)
+        if (deltaTime > 100) {
+            requestAnimationFrame(this.animate.bind(this));
+            return;
+        }
+
         this.update();
         this.draw();
-        requestAnimationFrame(this.animate.bind(this));
     }
 }
 
