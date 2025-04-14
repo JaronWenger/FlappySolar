@@ -12,13 +12,15 @@
     "build": "echo 'No build step needed'",
     "deploy": "gh-pages -d .",
     "fix-gh-pages": "node check-gh-pages.js",
-    "upload-images": "node upload-images.js"
+    "upload-images": "node upload-images.js",
+    "check-images": "node check-images.js"
   },
   "dependencies": {
-    "three": "^0.160.0"
+    "three": "^0.160.0",
+    "gh-pages": "^6.1.1",
+    "http-server": "^14.1.1"
   },
   "devDependencies": {
-    "nodemon": "^3.0.2",
-    "gh-pages": "^6.1.1"
+    "nodemon": "^3.0.2"
   }
 }
