@@ -63,9 +63,7 @@ class FlappySolar {
     
     loadImages() {
         // Get the base URL for GitHub Pages
-        const baseUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
-            ? '' 
-            : '/FlappySolar';
+        const baseUrl = window.location.hostname.includes('github.io') ? '/FlappySolar' : '';
             
         const imageSources = {
             bird: `${baseUrl}/src/LOGO.png`,
